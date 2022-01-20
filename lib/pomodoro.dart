@@ -38,8 +38,8 @@ class Timer extends StatefulWidget {
 }
 
 class _TimerState extends State<Timer> {
-  late int _duration;
-  late Color _backgroundColor;
+  int _duration = 0;
+  Color _backgroundColor = Colors.white;
 
   void _setCountDown() {
     setState(() {

@@ -37,6 +37,10 @@ dependencies:
   supabase_flutter: ^0.2.11
   intl: ^0.17.0
   countdown_widget: ^2.0.0
+  window_size:
+    git:
+      url: git://github.com/google/flutter-desktop-embedding.git
+      path: plugins/window_size
 
 dev_dependencies:
   flutter_test:

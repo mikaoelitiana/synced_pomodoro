@@ -1,8 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:synced_pomodoro/pomodoro.dart';
 import 'package:synced_pomodoro/services.dart';
+import 'package:window_size/window_size.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    setWindowTitle('Flutter Demo');
+    setWindowMinSize(const Size(600, 400));
+    setWindowMaxSize(Size.infinite);
+  }
+
   runApp(const SyncedPomodoroApp());
 }
 
