@@ -60,6 +60,13 @@ class _TimerState extends State<Timer> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Text(
+              widget.pomodoro.name,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5!
+                  .merge(const TextStyle(color: Colors.white)),
+            ),
             CountDownWidget(
               duration: Duration(seconds: _duration),
               builder: (context, duration) {
