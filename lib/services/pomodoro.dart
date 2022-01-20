@@ -14,7 +14,7 @@ class PomodorosService {
     if (response.error == null) {
       return toPomodoro(response.data[0]);
     }
-    return Pomodoro(0, 'Default pomodoro', '09:00 +02:00');
+    return Pomodoro(0, 'Default pomodoro', '09:00:00+02', '18:00:00+02');
   }
 
   Pomodoro toPomodoro(Map<String, dynamic> result) {
@@ -22,6 +22,7 @@ class PomodorosService {
       result['id'],
       result['name'],
       result['starting_at'],
+      result['ending_at'],
       focusInMinutes: result['focus'],
       breakInMinutes: result['break'],
       longBreakInMinutes: result['long_break'],

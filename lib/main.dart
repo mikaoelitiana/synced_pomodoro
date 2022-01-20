@@ -105,6 +105,13 @@ class _SyncedPomodoroHomePageState extends State<SyncedPomodoroHomePage> {
                     '${snapshot.data?.startingAtTime}',
                     style: Theme.of(context).textTheme.headline4,
                   ),
+                  const Text(
+                    'Ending at: ',
+                  ),
+                  Text(
+                    '${snapshot.data?.endingAtTime}',
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
                 ],
               );
             } else if (snapshot.hasError) {
