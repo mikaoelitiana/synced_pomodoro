@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:synced_pomodoro/models/pomodoro.dart';
 import 'package:synced_pomodoro/services.dart';
 import 'package:countdown_widget/countdown_widget.dart';
 
 class SyncedPomodoro extends StatelessWidget {
-  const SyncedPomodoro({
+  final int pomodoroId;
+
+  const SyncedPomodoro(
+    this.pomodoroId, {
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Services.of(context).pomodorosService.getPomodoroById(1),
+      future: Services.of(context).pomodorosService.getPomodoroById(pomodoroId),
       builder: (context, AsyncSnapshot<Pomodoro> snapshot) {
         if (snapshot.hasData && snapshot.data != null) {
           return Timer(pomodoro: snapshot.data as Pomodoro);
