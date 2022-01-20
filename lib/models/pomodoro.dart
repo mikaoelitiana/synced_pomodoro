@@ -11,6 +11,7 @@ class Pomodoro {
   int loopsBeforeLongBreak;
   bool active = true;
   late List<DateTime> focuses;
+  late List<DateTime> breaks;
 
   Pomodoro(this.id, this.name, String startingAtTime, String endingAtTime,
       {this.focusInMinutes = 25,
@@ -29,15 +30,17 @@ class Pomodoro {
 
   void initFocuses() {
     focuses = [startingAtTime];
-    DateTime time = startingAtTime;
+    breaks = [];
     int loop = 0;
-    while (endingAtTime.isAfter(time)) {
-      time = time.add(Duration(
+    while (endingAtTime.isAfter(focuses[loop])) {
+      focuses.add(focuses[loop].add(Duration(
           minutes: focusInMinutes +
-              (++loop % loopsBeforeLongBreak == 0
+              ((loop + 1) % loopsBeforeLongBreak == 0
                   ? longBreakInMinutes
-                  : breakInMinutes)));
-      focuses.add(time);
+                  : breakInMinutes))));
+      breaks.add(focuses[loop].add(Duration(minutes: focusInMinutes)));
+      loop++;
     }
+    breaks.add(endingAtTime);
   }
 }
