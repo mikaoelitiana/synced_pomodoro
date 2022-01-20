@@ -5,7 +5,7 @@ import 'package:synced_pomodoro/services/pomodoro.dart';
 class Services extends InheritedWidget {
   final PomodorosService pomodorosService;
 
-  Services._({
+  const Services._({
     required this.pomodorosService,
     required Widget child,
   }) : super(child: child);

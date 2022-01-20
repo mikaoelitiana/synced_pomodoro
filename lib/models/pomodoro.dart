@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:intl/intl.dart';
 
 enum Status {
@@ -7,7 +5,7 @@ enum Status {
   stopped,
 }
 
-enum Phase { _focus, _break }
+enum Phase { Focus, Break }
 
 class Pomodoro {
   final int id;
@@ -80,13 +78,14 @@ class Pomodoro {
   }
 
   Map<String, dynamic> getCountDown() {
+    DateTime now = DateTime.now();
     DateTime nextFocusStart = getNextFocusStart();
     DateTime nextBreakStart = getNextBreakStart();
-    DateTime to = nextFocusStart.isBefore(nextBreakStart)
-        ? nextFocusStart
-        : nextBreakStart;
+    int to = nextFocusStart.isBefore(nextBreakStart)
+        ? nextFocusStart.difference(now).inSeconds
+        : nextBreakStart.difference(now).inSeconds;
     Phase phase =
-        nextFocusStart.isBefore(nextBreakStart) ? Phase._focus : Phase._break;
+        nextFocusStart.isBefore(nextBreakStart) ? Phase.Break : Phase.Focus;
 
     return {'phase': phase, 'to': to};
   }
