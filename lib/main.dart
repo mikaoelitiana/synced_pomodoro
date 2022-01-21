@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:synced_pomodoro/pomodoro.dart';
 import 'package:synced_pomodoro/services.dart';
@@ -30,7 +31,7 @@ class SyncedPomodoroApp extends StatelessWidget {
         child: MaterialApp(
       title: 'Synced Pomodoro',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
+        primarySwatch: Colors.blueGrey,
       ),
       home: SyncedPomodoroMainRoute(
         title: 'Synced Pomodoro 🍅⏰',
@@ -73,7 +74,9 @@ class _SyncedPomodoroMainRouteState extends State<SyncedPomodoroMainRoute> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const PreferencesRoute()),
-          );
+          ).then((value) {
+            setState(() {});
+          });
         },
         tooltip: 'Go to preferences',
         child: const Icon(Icons.settings),
@@ -91,13 +94,18 @@ class PreferencesRoute extends StatefulWidget {
 
 class _PreferencesRouteState extends State<PreferencesRoute> {
   final _formKey = GlobalKey<FormState>();
-  final _pomodoroIdTextController = TextEditingController();
+  late TextEditingController _pomodoroIdTextController;
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     _pomodoroIdTextController.dispose();
     super.dispose();
+  }
+
+  Future<SharedPreferences> _getSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs;
   }
 
   @override
@@ -107,46 +115,58 @@ class _PreferencesRouteState extends State<PreferencesRoute> {
           title: const Text('Preferences'),
         ),
         body: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextFormField(
-                  controller: _pomodoroIdTextController,
-                  decoration: const InputDecoration(label: Text('Pomodoro ID')),
-                  // The validator receives the text that the user has entered.
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      // Validate returns true if the form is valid, or false otherwise.
-                      if (_formKey.currentState!.validate()) {
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
-                        );
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        await prefs.setInt('pomodoro_id',
-                            int.parse(_pomodoroIdTextController.text));
-                      }
-                    },
-                    child: const Text('Save'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ));
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FutureBuilder(
+                future: _getSharedPreferences(),
+                builder: (context, AsyncSnapshot<SharedPreferences> snapshot) {
+                  _pomodoroIdTextController = TextEditingController(
+                      text: snapshot.data?.getInt('pomodoro_id').toString());
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        controller: _pomodoroIdTextController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        ],
+                        decoration:
+                            const InputDecoration(label: Text('Pomodoro ID')),
+                        // The validator receives the text that the user has entered.
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter an ID';
+                          }
+                          return null;
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            // Validate returns true if the form is valid, or false otherwise.
+                            if (_formKey.currentState!.validate()) {
+                              // If the form is valid, display a snackbar. In the real world,
+                              // you'd often call a server or save the information in a database.
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Processing Data')),
+                              );
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              await prefs.setInt('pomodoro_id',
+                                  int.parse(_pomodoroIdTextController.text));
+                            }
+                          },
+                          child: const Text('Save'),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            )));
   }
 }
