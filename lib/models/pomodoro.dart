@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:intl/intl.dart';
 
 enum Status {
@@ -59,21 +61,26 @@ class Pomodoro {
     return Status.stopped;
   }
 
-  DateTime getNextFocusStart() {
+  int getNextFocusLoop() {
     DateTime now = DateTime.now();
     int i = 0;
-    while (i <= focuses.length && focuses[i].isBefore(now)) {
+    do {
       i++;
-    }
+    } while (i < focuses.length - 1 && focuses[i].isBefore(now));
+    return i;
+  }
+
+  DateTime getNextFocusStart() {
+    int i = getNextFocusLoop();
     return focuses[i];
   }
 
   DateTime getNextBreakStart() {
     DateTime now = DateTime.now();
     int i = 0;
-    while (i <= breaks.length && breaks[i].isBefore(now)) {
+    do {
       i++;
-    }
+    } while (i < breaks.length - 1 && breaks[i].isBefore(now));
     return breaks[i];
   }
 
@@ -81,12 +88,13 @@ class Pomodoro {
     DateTime now = DateTime.now();
     DateTime nextFocusStart = getNextFocusStart();
     DateTime nextBreakStart = getNextBreakStart();
+    int currentLoop = getNextFocusLoop() - 1;
     int to = nextFocusStart.isBefore(nextBreakStart)
         ? nextFocusStart.difference(now).inSeconds
         : nextBreakStart.difference(now).inSeconds;
     Phase phase =
         nextFocusStart.isBefore(nextBreakStart) ? Phase.Break : Phase.Focus;
 
-    return {'phase': phase, 'to': to};
+    return {'phase': phase, 'to': max(0, to), 'loop': currentLoop};
   }
 }

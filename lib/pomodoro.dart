@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:synced_pomodoro/models/pomodoro.dart';
 import 'package:synced_pomodoro/services.dart';
 import 'package:countdown_widget/countdown_widget.dart';
@@ -43,6 +42,7 @@ class Timer extends StatefulWidget {
 
 class _TimerState extends State<Timer> {
   int _duration = 0;
+  int _loop = 0;
   Color _backgroundColor = Colors.white;
 
   void _setCountDown() {
@@ -51,6 +51,7 @@ class _TimerState extends State<Timer> {
       _duration = countDown['to'];
       _backgroundColor =
           countDown['phase'] == Phase.Break ? Colors.green : Colors.red;
+      _loop = countDown['loop'];
     });
   }
 
@@ -65,7 +66,7 @@ class _TimerState extends State<Timer> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              widget.pomodoro.name,
+              '${widget.pomodoro.name} (🔁 $_loop)',
               style: Theme.of(context)
                   .textTheme
                   .headline5!
