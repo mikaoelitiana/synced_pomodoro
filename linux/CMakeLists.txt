@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
-set(BINARY_NAME "synced_pomodoro")
-set(APPLICATION_ID "com.example.synced_pomodoro")
+set(BINARY_NAME "Synced Pomodoro")
+set(APPLICATION_ID "com.mikaoelitiana.syncedPomodoro")
 
 cmake_policy(SET CMP0063 NEW)
 
