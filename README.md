@@ -11,3 +11,8 @@ flutter pub get
 flutter config --enable-macos-desktop
 flutter run -d macos
 ```
+
+## Credits
+
+- [App Icons Bundle Generator](https://www.iconify.pro)
+- [Icon Editor](https://www.freeicon.org)
