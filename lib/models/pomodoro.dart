@@ -30,9 +30,15 @@ class Pomodoro {
       this.loopsBeforeLongBreak = 4}) {
     DateTime now = DateTime.now();
     this.startingAtTime = DateTime.parse(
-        '${DateFormat('yyyy-MM-dd').format(now)}T$startingAtTime');
+            '${DateFormat('yyyy-MM-dd').format(now)}T$startingAtTime')
+        .toLocal();
     this.endingAtTime =
-        DateTime.parse('${DateFormat('yyyy-MM-dd').format(now)}T$endingAtTime');
+        DateTime.parse('${DateFormat('yyyy-MM-dd').format(now)}T$endingAtTime')
+            .toLocal();
+
+    if (this.endingAtTime.isBefore(this.startingAtTime)) {
+      this.endingAtTime = this.endingAtTime.add(const Duration(days: 1));
+    }
 
     initFocuses();
   }
@@ -42,12 +48,15 @@ class Pomodoro {
     breaks = [];
     int loop = 0;
     while (endingAtTime.isAfter(focuses[loop])) {
-      focuses.add(focuses[loop].add(Duration(
-          minutes: focusInMinutes +
-              ((loop + 1) % loopsBeforeLongBreak == 0
-                  ? longBreakInMinutes
-                  : breakInMinutes))));
-      breaks.add(focuses[loop].add(Duration(minutes: focusInMinutes)));
+      focuses.add(focuses[loop]
+          .add(Duration(
+              minutes: focusInMinutes +
+                  ((loop + 1) % loopsBeforeLongBreak == 0
+                      ? longBreakInMinutes
+                      : breakInMinutes)))
+          .toLocal());
+      breaks
+          .add(focuses[loop].add(Duration(minutes: focusInMinutes)).toLocal());
       loop++;
     }
     breaks.add(endingAtTime);
@@ -88,10 +97,10 @@ class Pomodoro {
     DateTime now = DateTime.now();
     DateTime nextFocusStart = getNextFocusStart();
     DateTime nextBreakStart = getNextBreakStart();
-    int currentLoop = getNextFocusLoop() - 1;
+    int currentLoop = getNextFocusLoop();
     int to = 0;
 
-    if (now.isAfter(nextFocusStart) && now.isBefore(nextBreakStart)) {
+    if (now.isAfter(startingAtTime) && now.isBefore(endingAtTime)) {
       to = nextFocusStart.isBefore(nextBreakStart)
           ? nextFocusStart.difference(now).inSeconds
           : nextBreakStart.difference(now).inSeconds;

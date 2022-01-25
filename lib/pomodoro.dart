@@ -57,7 +57,8 @@ class _TimerState extends State<Timer> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance?.addPostFrameCallback((_) => _setCountDown());
+    WidgetsBinding.instance
+        ?.addPostFrameCallback((_) => {if (_duration == 0) _setCountDown()});
 
     return Container(
       decoration: BoxDecoration(color: _backgroundColor),
