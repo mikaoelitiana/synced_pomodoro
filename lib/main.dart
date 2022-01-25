@@ -122,7 +122,8 @@ class _PreferencesRouteState extends State<PreferencesRoute> {
                 future: _getSharedPreferences(),
                 builder: (context, AsyncSnapshot<SharedPreferences> snapshot) {
                   _pomodoroIdTextController = TextEditingController(
-                      text: snapshot.data?.getInt('pomodoro_id').toString());
+                      text: (snapshot.data?.getInt('pomodoro_id') ?? 1)
+                          .toString());
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -89,9 +89,14 @@ class Pomodoro {
     DateTime nextFocusStart = getNextFocusStart();
     DateTime nextBreakStart = getNextBreakStart();
     int currentLoop = getNextFocusLoop() - 1;
-    int to = nextFocusStart.isBefore(nextBreakStart)
-        ? nextFocusStart.difference(now).inSeconds
-        : nextBreakStart.difference(now).inSeconds;
+    int to = 0;
+
+    if (now.isAfter(nextFocusStart) && now.isBefore(nextBreakStart)) {
+      to = nextFocusStart.isBefore(nextBreakStart)
+          ? nextFocusStart.difference(now).inSeconds
+          : nextBreakStart.difference(now).inSeconds;
+    }
+
     Phase phase =
         nextFocusStart.isBefore(nextBreakStart) ? Phase.Break : Phase.Focus;
 
