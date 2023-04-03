@@ -41,7 +41,7 @@ dependencies:
     git:
       url: git://github.com/google/flutter-desktop-embedding.git
       path: plugins/window_size
-  shared_preferences: ^2.0.12
+  shared_preferences: ^2.1.0
 
 dev_dependencies:
   flutter_test:
