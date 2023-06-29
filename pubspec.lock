@@ -49,7 +49,7 @@ packages:
       name: countdown_widget
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.2"
   crypto:
     dependency: transitive
     description:
@@ -204,7 +204,7 @@ packages:
       name: mutex
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "3.0.1"
   path:
     dependency: transitive
     description:

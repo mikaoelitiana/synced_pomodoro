@@ -36,7 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.5
   supabase_flutter: ^0.2.11
   intl: ^0.18.0
-  countdown_widget: ^2.0.0
+  countdown_widget: ^2.0.2
   window_size:
     git:
       url: git://github.com/google/flutter-desktop-embedding.git
